@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify
-from db.queue_crud import get_total_waiting_time, reset_queue_on_threshold
+from db.crud.reset import reset_queue_on_threshold
+from db.crud.total import get_total_waiting_time
 
 # Blueprintを作成
 wait_time_bp = Blueprint("wait_time", __name__)
