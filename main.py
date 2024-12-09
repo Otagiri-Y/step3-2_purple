@@ -2,6 +2,7 @@ from flask import Flask
 from routes.queue.add import queue_add_bp
 from routes.queue.leave import queue_leave_bp
 from routes.queue.status import queue_status_bp
+from routes.queue.prime_1 import queue_prime_bp
 from routes.wait_time import wait_time_bp
 
 # Flaskアプリケーションを作成
@@ -15,6 +16,7 @@ def home():
 app.register_blueprint(queue_add_bp, url_prefix='/api')
 app.register_blueprint(queue_leave_bp, url_prefix='/api')
 app.register_blueprint(queue_status_bp, url_prefix='/api')
+app.register_blueprint(queue_prime_bp, url_prefix='/api')
 app.register_blueprint(wait_time_bp, url_prefix='/api')
 
 # アプリケーションのエントリーポイント
