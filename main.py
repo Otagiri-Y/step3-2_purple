@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_migrate import Migrate
+from flask_cors import CORS  # 追加: CORS をインポート
 from dotenv import load_dotenv
 import os
 from db import db  # 修正: db を専用モジュールからインポート
@@ -14,6 +15,9 @@ load_dotenv()
 
 # Flaskアプリケーションを作成
 app = Flask(__name__)
+
+# CORS の設定を追加
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
 
 # データベース設定
 app.config["SQLALCHEMY_DATABASE_URI"] = (
