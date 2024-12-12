@@ -17,7 +17,14 @@ load_dotenv()
 app = Flask(__name__)
 
 # CORS の設定を追加
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
+CORS(app, resources={
+    r"/api/*": {
+        "origins": [
+            "https://tech0-gen-8-step3-app-node-6.azurewebsites.net",
+            "http://localhost:3000"
+        ]
+    }
+})
 
 # データベース設定
 app.config["SQLALCHEMY_DATABASE_URI"] = (
