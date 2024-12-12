@@ -2,7 +2,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_cors import CORS
 from dotenv import load_dotenv
-from db import db, configure_database  # db と SSL 設定を行う関数をインポート
+from db.connection import db, configure_database  # 修正: connection.py からインポート
 from routes.queue.add import queue_add_bp
 from routes.queue.leave import queue_leave_bp
 from routes.queue.status import queue_status_bp
@@ -22,9 +22,7 @@ CORS(app, resources={
         "origins": [
             "https://tech0-gen-8-step3-app-node-6.azurewebsites.net",
             "http://localhost:3000"
-        ],
-        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
+        ]
     }
 })
 
