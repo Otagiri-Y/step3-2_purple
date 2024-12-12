@@ -51,5 +51,5 @@ app.register_blueprint(wait_time_bp, url_prefix='/api')
 # アプリケーションのエントリーポイント
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 8080))  # Azureが指定するポートに従う
-    app.run(debug=True, host="0.0.0.0", port=port)
+    app.run(debug=False, host="0.0.0.0", port=port)
 
