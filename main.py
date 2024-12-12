@@ -22,7 +22,9 @@ CORS(app, resources={
         "origins": [
             "https://tech0-gen-8-step3-app-node-6.azurewebsites.net",
             "http://localhost:3000"
-        ]
+        ],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
     }
 })
 
