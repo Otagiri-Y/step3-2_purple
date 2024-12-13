@@ -1,14 +1,14 @@
 from flask import Flask
 from flask_migrate import Migrate
-from flask_cors import CORS  # 追加: CORS をインポート
+from flask_cors import CORS
 from dotenv import load_dotenv
-import os
-from db import db  # 修正: db を専用モジュールからインポート
+from db.connection import configure_database, db  # 修正: db と configure_database をインポート
 from routes.queue.add import queue_add_bp
 from routes.queue.leave import queue_leave_bp
 from routes.queue.status import queue_status_bp
 from routes.queue.prime_1 import queue_prime_bp
 from routes.wait_time import wait_time_bp
+import os
 
 # 環境変数をロード
 load_dotenv()
@@ -16,7 +16,7 @@ load_dotenv()
 # Flaskアプリケーションを作成
 app = Flask(__name__)
 
-# CORS の設定を追加
+# CORS の設定
 CORS(app, resources={
     r"/api/*": {
         "origins": [
@@ -27,21 +27,17 @@ CORS(app, resources={
 })
 
 # データベース設定
-app.config["SQLALCHEMY_DATABASE_URI"] = (
-    f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@"
-    f"{os.getenv('DB_HOST')}/{os.getenv('DB_NAME')}?ssl_ca={os.getenv('DB_SSL_CA')}"
-)
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+configure_database(app)  # データベース設定と初期化を一元化
 
-# データベース初期化
-db.init_app(app)
-migrate = Migrate(app, db)
+# マイグレーションの設定
+migrate = Migrate(app, db)  # Migrate の初期化はここで実施
 
+# テスト用ルート
 @app.route('/')
 def home():
     return "Hello, World!!!!"
 
-# Blueprintを登録
+# Blueprint を登録
 app.register_blueprint(queue_add_bp, url_prefix='/api')
 app.register_blueprint(queue_leave_bp, url_prefix='/api')
 app.register_blueprint(queue_status_bp, url_prefix='/api')
@@ -50,5 +46,5 @@ app.register_blueprint(wait_time_bp, url_prefix='/api')
 
 # アプリケーションのエントリーポイント
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 8080))  # Azureが指定するポートに従う
+    port = int(os.getenv("PORT", 8080))  # Azure が指定するポートを使用
     app.run(debug=False, host="0.0.0.0", port=port)
