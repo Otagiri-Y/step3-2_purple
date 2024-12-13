@@ -2,14 +2,17 @@ from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_cors import CORS
 from dotenv import load_dotenv
-from db.connection import configure_database, db
+from db.connection import configure_database
+from db import db
+from db.models import Queue
+import os
+import logging
 from routes.queue.add import queue_add_bp
 from routes.queue.leave import queue_leave_bp
 from routes.queue.status import queue_status_bp
 from routes.queue.prime_1 import queue_prime_bp
 from routes.wait_time import wait_time_bp
-import os
-import logging
+
 
 # 環境変数をロード
 load_dotenv()
@@ -25,15 +28,17 @@ CORS(app, resources={
     r"/api/*": {
         "origins": [
             "https://tech0-gen-8-step3-app-node-6.azurewebsites.net",
-            "http://localhost:3000"
+            "http://localhost:3000",
+            "http://127.0.0.1:8080"  # ローカル用のURLを追加
         ],
         "supports_credentials": True
     }
 })
 
-# データベース設定
+# データベース設定と初期化
 try:
-    configure_database(app)  # データベース設定と初期化を一元化
+    configure_database(app)  # データベース設定
+    db.init_app(app)         # データベース初期化
 except Exception as e:
     app.logger.error(f"Failed to configure database: {e}")
     raise e
